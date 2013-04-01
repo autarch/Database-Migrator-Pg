@@ -4,8 +4,10 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
+use Database::Migrator 0.05;
 use Database::Migrator::Types qw( HashRef Str );
 use File::Slurp qw( read_file );
+use Pg::CLI 0.11;
 use Pg::CLI::createdb;
 use Pg::CLI::dropdb;
 use Pg::CLI::psql;
