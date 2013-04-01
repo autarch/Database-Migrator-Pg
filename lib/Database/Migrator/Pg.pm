@@ -4,9 +4,10 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Database::Migrator::Types qw( Str );
+use Database::Migrator::Types qw( HashRef Str );
 use File::Slurp qw( read_file );
 use Pg::CLI::createdb;
+use Pg::CLI::dropdb;
 use Pg::CLI::psql;
 
 use Moose;
@@ -41,17 +42,6 @@ has _cli_constructor_args => (
     builder  => '_build_cli_constructor_args',
 );
 
-sub _build_database_exists {
-    my $self = shift;
-
-    my $stdout = $self->_psql_or_dir(
-        'run',
-        options => ['-l'],
-    );
-
-    return $stdout =~ /^\s+\Q$database\E\s+/;
-}
-
 sub _create_database {
     my $self = shift;
 
@@ -59,15 +49,15 @@ sub _create_database {
 
     $self->logger()->info("Creating the $database database");
 
-    my $createdb = Pg::CLI::createdb->new( $self->_cli_constructor_args() );
-
     my @opts;
     push @opts, '-E', $self->encoding()
         if $self->_has_encoding();
     push @opts, '-O', $self->owner()
         if $self->_has_owner();
 
-    $createdb->run(
+    $self->_run_cli_or_die(
+        'createdb',
+        'run',
         database => $self->database(),
         options  => \@opts,
     );
@@ -79,21 +69,44 @@ sub _run_ddl {
     my $self = shift;
     my $file = shift;
 
-    $self->_psql_or_dir(
+    $self->_run_cli_or_die(
+        'psql',
         'execute_file',
         database => $self->database(),
         file     => $file,
     );
+
+    return;
 }
 
-sub _psql_or_die {
-    my $self   = shift;
-    my $method = shift;
-    my %args   = @_;
+sub _drop_database {
+    my $self = shift;
+
+    my $database = $self->database();
+
+    $self->logger()->info("Dropping the $database database");
+
+    $self->_run_cli_or_die(
+        'dropdb',
+        'run',
+        database => $self->database(),
+        options  => ['--if-exists'],
+    );
+
+    return;
+}
+
+sub _run_cli_or_die {
+    my $self    = shift;
+    my $cli_obj = shift;
+    my $method  = shift;
+    my %args    = @_;
+
+    my $cli_obj_method = q{_} . $cli_obj;
 
     my $stdout;
     my $stderr;
-    $self->_psql()->$method(
+    $self->$cli_obj_method()->$method(
         %args,
         stdout => \$stdout,
         stderr => \$stderr,
@@ -102,6 +115,18 @@ sub _psql_or_die {
     die $stderr if $stderr;
 
     return $stdout;
+}
+
+sub _createdb {
+    my $self = shift;
+
+    return Pg::CLI::createdb->new( $self->_cli_constructor_args() );
+}
+
+sub _dropdb {
+    my $self = shift;
+
+    return Pg::CLI::dropdb->new( $self->_cli_constructor_args() );
 }
 
 sub _build_psql {
@@ -125,15 +150,16 @@ sub _build_cli_constructor_args {
     return \%args;
 }
 
-sub _build_dbh {
+around _build_dbh => sub {
+    my $orig = shift;
     my $self = shift;
 
-    return DBI->connect(
-        'dbi:Pg:' . $self->database(),
-        $self->user(),
-        $self->password(),
-    );
-}
+    my $dbh = $self->$orig(@_);
+
+    $dbh->do('SET CLIENT_MIN_MESSAGES = ERROR');
+
+    return $dbh;
+};
 
 __PACKAGE__->meta()->make_immutable();
 
