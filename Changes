@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.03     2013-04-06
+
 - Added a compilation test to make CPAN testers happy.
 
 
