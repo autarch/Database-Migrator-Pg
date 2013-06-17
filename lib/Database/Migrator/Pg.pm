@@ -163,6 +163,8 @@ around _build_dbh => sub {
     return $dbh;
 };
 
+sub _driver_name { 'Pg' }
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
