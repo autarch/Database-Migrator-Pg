@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
+our $VERSION = '0.05';
+
 use Database::Migrator 0.07;
 use Database::Migrator::Types qw( HashRef Str );
 use File::Slurp qw( read_file );
