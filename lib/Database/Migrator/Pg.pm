@@ -8,7 +8,6 @@ our $VERSION = '0.06';
 
 use Database::Migrator 0.07;
 use Database::Migrator::Types qw( HashRef Str );
-use File::Slurp qw( read_file );
 use Pg::CLI 0.11;
 use Pg::CLI::createdb;
 use Pg::CLI::dropdb;
