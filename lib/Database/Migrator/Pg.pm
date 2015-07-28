@@ -47,30 +47,30 @@ has _cli_constructor_args => (
 sub _create_database {
     my $self = shift;
 
-    my $database = $self->database();
+    my $database = $self->database;
 
-    $self->logger()->info("Creating the $database database");
+    $self->logger->info("Creating the $database database");
 
     my @opts;
-    push @opts, '--encoding', $self->encoding()
-        if $self->_has_encoding();
-    push @opts, '--locale', $self->locale()
-        if $self->_has_locale();
-    push @opts, '--lc-collate', $self->lc_collate()
-        if $self->_has_lc_collate();
-    push @opts, '--lc-ctype', $self->lc_ctype()
-        if $self->_has_lc_ctype();
-    push @opts, '--owner', $self->owner()
-        if $self->_has_owner();
-    push @opts, '--tablespace', $self->tablespace()
-        if $self->_has_tablespace();
-    push @opts, '--template', $self->template()
-        if $self->_has_template();
+    push @opts, '--encoding', $self->encoding
+        if $self->_has_encoding;
+    push @opts, '--locale', $self->locale
+        if $self->_has_locale;
+    push @opts, '--lc-collate', $self->lc_collate
+        if $self->_has_lc_collate;
+    push @opts, '--lc-ctype', $self->lc_ctype
+        if $self->_has_lc_ctype;
+    push @opts, '--owner', $self->owner
+        if $self->_has_owner;
+    push @opts, '--tablespace', $self->tablespace
+        if $self->_has_tablespace;
+    push @opts, '--template', $self->template
+        if $self->_has_template;
 
     $self->_run_cli_or_die(
         'createdb',
         'run',
-        database => $self->database(),
+        database => $self->database,
         options  => \@opts,
     );
 
@@ -84,7 +84,7 @@ sub _run_ddl {
     $self->_run_cli_or_die(
         'psql',
         'execute_file',
-        database => $self->database(),
+        database => $self->database,
         file     => $file,
     );
 
@@ -94,14 +94,14 @@ sub _run_ddl {
 sub _drop_database {
     my $self = shift;
 
-    my $database = $self->database();
+    my $database = $self->database;
 
-    $self->logger()->info("Dropping the $database database");
+    $self->logger->info("Dropping the $database database");
 
     $self->_run_cli_or_die(
         'dropdb',
         'run',
-        database => $self->database(),
+        database => $self->database,
         options  => ['--if-exists'],
     );
 
@@ -118,7 +118,7 @@ sub _run_cli_or_die {
 
     my $stdout;
     my $stderr;
-    $self->$cli_obj_method()->$method(
+    $self->$cli_obj_method->$method(
         %args,
         stdout => \$stdout,
         stderr => \$stderr,
@@ -132,13 +132,13 @@ sub _run_cli_or_die {
 sub _createdb {
     my $self = shift;
 
-    return Pg::CLI::createdb->new( $self->_cli_constructor_args() );
+    return Pg::CLI::createdb->new( $self->_cli_constructor_args );
 }
 
 sub _dropdb {
     my $self = shift;
 
-    return Pg::CLI::dropdb->new( $self->_cli_constructor_args() );
+    return Pg::CLI::dropdb->new( $self->_cli_constructor_args );
 }
 ## use critic
 
@@ -146,7 +146,7 @@ sub _build_psql {
     my $self = shift;
 
     return Pg::CLI::psql->new(
-        %{ $self->_cli_constructor_args() },
+        %{ $self->_cli_constructor_args },
         quiet => 1,
     );
 }
@@ -156,8 +156,8 @@ sub _build_cli_constructor_args {
 
     my %args;
     for my $m (qw( username password host port )) {
-        $args{$m} = $self->$m()
-            if defined $self->$m();
+        $args{$m} = $self->$m
+            if defined $self->$m;
     }
 
     return \%args;
@@ -178,7 +178,7 @@ around _build_dbh => sub {
 sub _driver_name {'Pg'}
 ## use critic
 
-__PACKAGE__->meta()->make_immutable();
+__PACKAGE__->meta->make_immutable;
 
 1;
 
