@@ -52,9 +52,9 @@ sub _create_database {
     $self->logger()->info("Creating the $database database");
 
     my @opts;
-    push @opts, '-E', $self->encoding()
+    push @opts, '--encoding', $self->encoding()
         if $self->_has_encoding();
-    push @opts, '-O', $self->owner()
+    push @opts, '--owner', $self->owner()
         if $self->_has_owner();
 
     $self->_run_cli_or_die(
