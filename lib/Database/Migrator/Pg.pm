@@ -217,12 +217,12 @@ database.
 
 =item * lc_collate
 
-The LC_COLLATE setting forthe database. This is only used when creating a new
+The LC_COLLATE setting for the database. This is only used when creating a new
 database.
 
 =item * lc_ctype
 
-The LC_CTYPE setting forthe database. This is only used when creating a new
+The LC_CTYPE setting for the database. This is only used when creating a new
 database.
 
 =item * owner
