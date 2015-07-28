@@ -1,3 +1,4 @@
+## no critic (Moose::RequireMakeImmutable)
 use strict;
 use warnings;
 
@@ -10,6 +11,8 @@ use Database::Migrator::Pg;
     package Test::Database::Migrator::Pg;
 
     use Moose;
+    use namespace::autoclean;
+
     extends 'Test::Database::Migrator';
 
     around _write_ddl_file => sub {
@@ -27,6 +30,7 @@ EOF
         $self->$orig( $file, $ddl );
     };
 
+    ## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
     sub _tables {
         my $self = shift;
 
@@ -37,11 +41,12 @@ EOF
             push @tables, $table->{pg_table};
         }
 
+        ## no critic (Subroutines::ProhibitReturnSort)
         return sort @tables;
     }
 
     sub _indexes_on {
-        my $self = shift;
+        my $self  = shift;
         my $table = shift;
 
         my @indexes;
@@ -52,6 +57,8 @@ EOF
 
             # With Pg we get some weird results back, including an index with
             # undef as the name.
+            #
+            ## no critic (ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions)
             next
                 unless $index->{INDEX_NAME}
                 && $index->{COLUMN_NAME} !~ /_id$/;
@@ -59,6 +66,7 @@ EOF
             push @indexes, $index->{INDEX_NAME};
         }
 
+        ## no critic (Subroutines::ProhibitReturnSort)
         return sort @indexes;
     }
 }

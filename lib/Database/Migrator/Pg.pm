@@ -18,8 +18,9 @@ use Moose;
 
 with 'Database::Migrator::Core';
 
-for my $create_flag (qw( encoding locale lc_collate lc_ctype owner tablespace template ))
-{
+for my $create_flag (
+    qw( encoding locale lc_collate lc_ctype owner tablespace template )) {
+
     has $create_flag => (
         is        => 'ro',
         isa       => Str,
@@ -43,6 +44,7 @@ has _cli_constructor_args => (
     builder  => '_build_cli_constructor_args',
 );
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _create_database {
     my $self = shift;
 
@@ -139,6 +141,7 @@ sub _dropdb {
 
     return Pg::CLI::dropdb->new( $self->_cli_constructor_args() );
 }
+## use critic
 
 sub _build_psql {
     my $self = shift;
@@ -172,7 +175,9 @@ around _build_dbh => sub {
     return $dbh;
 };
 
-sub _driver_name { 'Pg' }
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
+sub _driver_name {'Pg'}
+## use critic
 
 __PACKAGE__->meta()->make_immutable();
 

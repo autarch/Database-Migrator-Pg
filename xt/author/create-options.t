@@ -77,7 +77,10 @@ my %tests = (
 
 my $command;
 no warnings 'redefine';
+
+## no critic (Variables::ProtectPrivateVars)
 local *Pg::CLI::createdb::_call_run3 = sub { $command = $_[1] };
+## use critic
 
 for my $test ( sort keys %tests ) {
     undef $command;
