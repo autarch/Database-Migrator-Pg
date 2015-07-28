@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.05     2015-07-28
+
 - Added support for all missing createdb options: --locale, --lc-collate,
   --lc-ctype, --tablespace, and --template.
 
