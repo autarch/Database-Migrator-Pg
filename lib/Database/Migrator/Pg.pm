@@ -16,17 +16,14 @@ use Moose;
 
 with 'Database::Migrator::Core';
 
-has encoding => (
-    is        => 'ro',
-    isa       => Str,
-    predicate => '_has_encoding',
-);
-
-has owner => (
-    is        => 'ro',
-    isa       => Str,
-    predicate => '_has_owner',
-);
+for my $create_flag (qw( encoding locale lc_collate lc_ctype owner tablespace template ))
+{
+    has $create_flag => (
+        is        => 'ro',
+        isa       => Str,
+        predicate => '_has_' . $create_flag,
+    );
+}
 
 has _psql => (
     is       => 'ro',
@@ -54,8 +51,18 @@ sub _create_database {
     my @opts;
     push @opts, '--encoding', $self->encoding()
         if $self->_has_encoding();
+    push @opts, '--locale', $self->locale()
+        if $self->_has_locale();
+    push @opts, '--lc-collate', $self->lc_collate()
+        if $self->_has_lc_collate();
+    push @opts, '--lc-ctype', $self->lc_ctype()
+        if $self->_has_lc_ctype();
     push @opts, '--owner', $self->owner()
         if $self->_has_owner();
+    push @opts, '--tablespace', $self->tablespace()
+        if $self->_has_tablespace();
+    push @opts, '--template', $self->template()
+        if $self->_has_template();
 
     $self->_run_cli_or_die(
         'createdb',
@@ -192,19 +199,43 @@ L<Database::Migrator> and L<Database::Migrator::Core> for more documentation.
 =head1 ATTRIBUTES
 
 This class adds several attributes in addition to those implemented by
-L<Database::Migrator::Core>:
+L<Database::Migrator::Core>. All of these attributes are optional.
 
 =over 4
 
 =item * encoding
 
 The encoding of the database. This is only used when creating a new
-database. This is optional.
+database.
+
+=item * locale
+
+The locale of the database. This is only used when creating a new
+database.
+
+=item * lc_collate
+
+The LC_COLLATE setting forthe database. This is only used when creating a new
+database.
+
+=item * lc_ctype
+
+The LC_CTYPE setting forthe database. This is only used when creating a new
+database.
 
 =item * owner
 
 The owner of the database. This is only used when creating a new
-database. This is optional.
+database.
+
+=item * tablespace
+
+The tablespace for the database. This is only used when creating a new
+database.
+
+=item * template
+
+The template for the database. This is only used when creating a new database.
 
 =back
 
