@@ -3,9 +3,11 @@
 use strict;
 use warnings;
 
+use Pg::CLI::createdb;
 use Test::More 0.88;
 
 use Database::Migrator::Pg;
+use Pg::CLI::createdb;
 
 my %tests = (
     'no options' => {
