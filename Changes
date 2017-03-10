@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- SQL migrations will now terminate on the first error in the script rather
+  continuing on error. Closes RT #120488.
+
+
 0.05     2015-07-28
 
 - Added support for all missing createdb options: --locale, --lc-collate,

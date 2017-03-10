@@ -86,6 +86,7 @@ sub _run_ddl {
         'execute_file',
         database => $self->database,
         file     => $file,
+        options  => [ -v => 'ON_ERROR_STOP=1' ],
     );
 
     return;
