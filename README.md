@@ -69,18 +69,17 @@ Please submit bugs to the CPAN RT system at
 http://rt.cpan.org/NoAuth/Bugs.html?Dist=Database-Migrator-Pg or via email at
 bug-database-migrator-pg@rt.cpan.org.
 
-Bugs may be submitted through [the RT bug tracker](http://rt.cpan.org/Public/Dist/Display.html?Name=Database-Migrator-Pg)
-(or [bug-database-migrator-pg@rt.cpan.org](mailto:bug-database-migrator-pg@rt.cpan.org)).
-
-I am also usually active on IRC as 'drolsky' on `irc://irc.perl.org`.
-
 # AUTHOR
 
-Dave Rolsky &lt;autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
-# COPYRIGHT AND LICENCE
+# CONTRIBUTOR
 
-This software is Copyright (c) 2016 by MaxMind, Inc.
+Gregory Oschwald <goschwald@maxmind.com>
+
+# COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2013 - 2017 by MaxMind, Inc.
 
 This is free software, licensed under:
 
