@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.06     2017-03-10
+
 - SQL migrations will now terminate on the first error in the script rather
   continuing on error. Closes RT #120488.
 
